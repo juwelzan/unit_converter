@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 class JumpingButton extends StatefulWidget {
   final double? height, width;
@@ -31,10 +32,16 @@ class JumpingButton extends StatefulWidget {
 
 class _JumpingButtonState extends State<JumpingButton> {
   final Duration _duration = Duration(milliseconds: 60);
+  Future<void> vibration(int d) async {
+    if (await Vibration.hasVibrator()) {
+      Vibration.vibrate(duration: d);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder(
-      tween: Tween(begin: 1, end: isClick ? 0.8 : 1),
+      tween: Tween(begin: 1, end: isClick ? 0.9 : 1),
       duration: _duration,
       builder: (context, value, child) {
         return AnimatedScale(
@@ -44,6 +51,15 @@ class _JumpingButtonState extends State<JumpingButton> {
         );
       },
       child: GestureDetector(
+        onLongPressStart: (details) async {
+          await vibration(30);
+          setState(() => isClick = true);
+        },
+        onLongPressEnd: (details) async {
+          await vibration(50);
+          setState(() => isClick = false);
+          if (widget.onTap != null) widget.onTap!();
+        },
         onTap: clickUpdate,
         child: Container(
           padding: widget.padding,
@@ -66,6 +82,7 @@ class _JumpingButtonState extends State<JumpingButton> {
   void clickUpdate() async {
     setState(() => isClick = true);
     await Future.delayed(_duration, () => setState(() => isClick = false));
+    await vibration(50);
     if (widget.onTap != null) widget.onTap!();
   }
 }

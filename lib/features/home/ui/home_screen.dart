@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unit_converter/core/package/screen_utile/extension.dart';
+import 'package:unit_converter/features/home/data/category_data.dart';
 import 'package:unit_converter/features/home/widgets/categort_card.dart';
 import 'package:unit_converter/shared/widgets/sliver_sizedbox.dart';
 
@@ -11,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int initialIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +30,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisSpacing: 10.w,
                 mainAxisSpacing: 10.w,
               ),
-              children: List.generate(8, (index) {
-                return CategortCard();
+              children: List.generate(CategoryData.data.length, (index) {
+                final data = CategoryData.data[index];
+                return CategortCard(
+                  index: index,
+                  isActiv: index == initialIndex,
+                  unitType: data.unitType,
+                  icon: data.icon,
+                  title: data.name,
+                  onTap: (unitType, inde) {
+                    setState(() {
+                      initialIndex = inde;
+                    });
+                  },
+                );
               }),
+            ),
+          ),
+          SliverSizedbox(height: 30.h),
+          SliverSizedbox(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            height: 50.h,
+            width: double.infinity,
+            child: TextField(
+              decoration: InputDecoration(border: OutlineInputBorder()),
+            ),
+          ),
+
+          SliverSizedbox(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            height: 50.h,
+            width: double.infinity,
+            child: Row(
+              children: [
+                Container(width: 0.25.mw, height: 50.h, color: Colors.amber),
+              ],
             ),
           ),
         ],
