@@ -9,6 +9,8 @@ class JumpingButton extends StatefulWidget {
   final BoxBorder? border;
   final List<BoxShadow>? boxShadow;
   final Color? color;
+  final BoxShape shape;
+  final int? duration;
 
   final VoidCallback? onTap;
 
@@ -24,14 +26,18 @@ class JumpingButton extends StatefulWidget {
     this.color,
 
     this.onTap,
+    this.shape = BoxShape.rectangle,
+    this.duration,
   });
 
   @override
   State<JumpingButton> createState() => _JumpingButtonState();
 }
 
-class _JumpingButtonState extends State<JumpingButton> {
-  final Duration _duration = Duration(milliseconds: 60);
+class _JumpingButtonState extends State<JumpingButton>
+    with AutomaticKeepAliveClientMixin {
+  Duration _duration() => Duration(milliseconds: widget.duration ?? 60);
+
   Future<void> vibration(int d) async {
     if (await Vibration.hasVibrator()) {
       Vibration.vibrate(duration: d);
@@ -40,13 +46,14 @@ class _JumpingButtonState extends State<JumpingButton> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return TweenAnimationBuilder(
       tween: Tween(begin: 1, end: isClick ? 0.9 : 1),
-      duration: _duration,
+      duration: _duration(),
       builder: (context, value, child) {
         return AnimatedScale(
           scale: value.toDouble(),
-          duration: _duration,
+          duration: _duration(),
           child: child,
         );
       },
@@ -66,10 +73,11 @@ class _JumpingButtonState extends State<JumpingButton> {
           height: widget.height,
           width: widget.width,
           decoration: BoxDecoration(
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
+            borderRadius: widget.borderRadius,
             border: widget.border,
             boxShadow: widget.boxShadow,
             color: widget.color ?? Colors.deepPurple,
+            shape: widget.shape,
           ),
           child: widget.child,
         ),
@@ -81,8 +89,11 @@ class _JumpingButtonState extends State<JumpingButton> {
 
   void clickUpdate() async {
     setState(() => isClick = true);
-    await Future.delayed(_duration, () => setState(() => isClick = false));
+    await Future.delayed(_duration(), () => setState(() => isClick = false));
     await vibration(50);
     if (widget.onTap != null) widget.onTap!();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

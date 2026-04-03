@@ -9,7 +9,7 @@ class CategoryData {
       unitType: .area,
     ),
     CategoryModel(
-      name: "Data",
+      name: "Storag",
       icon: "assets/data-svgrepo-com.svg",
       unitType: .data,
     ),
