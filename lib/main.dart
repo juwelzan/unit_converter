@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:unit_converter/core/package/screen_utile/screen_utile.dart';
+import 'package:unit_converter/features/home/provider/provider.dart';
 import 'package:unit_converter/features/home/ui/home_screen.dart';
 
 void main() {
@@ -9,7 +11,10 @@ void main() {
   runApp(
     ScreenUtile(
       builder: (context) {
-        return const MyApp();
+        return ChangeNotifierProvider(
+          create: (context) => UnitProvider(),
+          child: MyApp(),
+        );
       },
     ),
   );

@@ -9,41 +9,43 @@ import 'package:unit_converter/shared/widgets/jumping_button.dart';
 typedef Unit = Function(UnitType, int);
 
 class CategortCard extends StatelessWidget {
-  final String? icon, title;
+  final CategoryModel data;
   final bool isActiv;
   final int index;
   final Unit onTap;
-  final UnitType unitType;
+
   const CategortCard({
     super.key,
-    this.icon,
-    this.title,
+
     required this.onTap,
-    required this.unitType,
+
     required this.isActiv,
     required this.index,
+    required this.data,
   });
 
   @override
   Widget build(BuildContext context) {
     return JumpingButton(
       onTap: () {
-        onTap.call(unitType, index);
+        onTap.call(data.unitType, index);
       },
+      color: data.back.withOpacity(0.4),
+      borderRadius: .circular(20),
       padding: EdgeInsets.all(2),
-      border: isActiv ? Border.all(color: Colors.black, width: 4) : Border(),
+      border: isActiv ? Border.all(color: data.iconco, width: 4) : Border(),
       child: Column(
         mainAxisAlignment: .spaceEvenly,
         crossAxisAlignment: .center,
         children: [
-          SvgPicture.asset(
-            icon ?? "assets/area-chart-svgrepo-com.svg",
-            color: Colors.amber,
-            width: 45.w,
-          ),
+          SvgPicture.asset(data.icon, color: data.iconco, width: 45.w),
           Text(
-            title ?? "",
-            style: TextStyle(fontSize: 13.sp, fontWeight: .bold),
+            data.name,
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: .bold,
+              color: data.text,
+            ),
           ),
         ],
       ),
