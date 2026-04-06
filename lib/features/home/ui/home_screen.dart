@@ -27,7 +27,14 @@ class _HomeScreenState extends State<HomeScreen>
         return Scaffold(
           backgroundColor: Color(0xff0D0B1E),
           appBar: AppBar(
-            title: Text("Unit Converter"),
+            title: Text(
+              "Unit Converter",
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             centerTitle: true,
             backgroundColor: Color(0xff0D0B1E),
           ),
