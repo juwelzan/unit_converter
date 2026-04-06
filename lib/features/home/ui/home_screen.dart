@@ -5,7 +5,6 @@ import 'package:unit_converter/features/home/data/category_data.dart';
 import 'package:unit_converter/features/home/provider/provider.dart';
 import 'package:unit_converter/features/home/widgets/categort_card.dart';
 import 'package:unit_converter/features/home/widgets/select_drop.dart';
-import 'package:unit_converter/features/home/widgets/view_ans.dart';
 import 'package:unit_converter/shared/widgets/sliver_sizedbox.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   int initialIndex = 0;
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
                           inde,
                           data.iconco,
                         );
+                        context.read<UnitProvider>().updateType(unitType);
                       },
                     );
                   }, childCount: CategoryData.data.length),
@@ -63,24 +64,40 @@ class _HomeScreenState extends State<HomeScreen>
                 height: 50.h,
                 width: double.infinity,
                 child: TextField(
-                  decoration: InputDecoration(border: OutlineInputBorder()),
+                  style: TextStyle(color: Colors.white, fontSize: 15.sp),
+                  textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.number,
+                  textCapitalization: TextCapitalization.none,
+
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    // label: Text("Enter Value"),
+                    hintText: "Enter Value",
+                    labelText: "From",
+                    labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                  ),
+                  onChanged: (value) {
+                    context.read<UnitProvider>().value =
+                        double.tryParse(value) ?? 0;
+                    context.read<UnitProvider>().updateFormDrop(false);
+                    context.read<UnitProvider>().updateToDrop(false);
+                    context.read<UnitProvider>().answer(
+                      state.types[0].name,
+                      state.selectedFormTypeName,
+                      state.selectedToTypeName,
+                      double.tryParse(value) ?? 0,
+                    );
+                  },
                 ),
               ),
 
               SliverSizedbox(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                height: 80.h,
                 width: double.infinity,
+                height: 470.h,
                 child: SelectDrop(),
               ),
-              SliverPadding(padding: EdgeInsets.all(10)),
-              SliverSizedbox(
-                padding: EdgeInsets.all(10.w),
-                height: 150.h,
-                width: double.infinity,
-                child: ViewAns(),
-              ),
-              SliverPadding(padding: EdgeInsets.all(100)),
             ],
           ),
         );
@@ -93,6 +110,12 @@ class _HomeScreenState extends State<HomeScreen>
   //   // print(ConvetarService.convetTime(value: 2, from: .month, to: .month));
   //   print(ConvetarService.convertArea(20, .acre, .squareCentimeter));
   // }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   bool get wantKeepAlive => true;

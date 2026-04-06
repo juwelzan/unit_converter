@@ -160,11 +160,15 @@ class ConvetarService {
 
     return valueInMeter / toMeter[to]!;
   }
+
   //Length service
 }
 
 //Area service
 /// enum type
+///
+///
+
 enum SpeedType { meterPerSecond, kilometerPerHou, milesPerHour, feetPerSecond }
 
 enum Temperature { c, f, k }
@@ -209,15 +213,3 @@ enum AreaType {
 }
 
 enum LengthType { meter, kilometer, centimeter, millimeter, inch, foot }
-
-
-/// enum type
-
-
-// square meter (m²)
-// square kilometer (km²)
-// square centimeter (cm²)
-// square foot (ft²)
-// square inch (in²)
-// acre
-// hectare
